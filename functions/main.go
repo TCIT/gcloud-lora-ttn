@@ -133,19 +133,19 @@ func HandleTTNUplink(w http.ResponseWriter, r *http.Request) {
 
 	deviceData := GetDeviceUpdate(msg)
 
-	log.Printf("Sending update to firebase  %v\n", deviceData)
+// 	log.Printf("Sending update to firebase  %v\n", deviceData)
 
-	ctx := context.Background()
+// 	ctx := context.Background()
 
-	devicesRef := database.NewRef("devices")
-	err = devicesRef.Child(msg.DevID).Update(ctx, deviceData)
-	if err != nil {
-		log.Printf("error updating firebase: %v\n", err.Error())
-		sendErrorResponse(w, err.Error())
-		return
-	}
+// 	devicesRef := database.NewRef("devices")
+// 	err = devicesRef.Child(msg.DevID).Update(ctx, deviceData)
+// 	if err != nil {
+// 		log.Printf("error updating firebase: %v\n", err.Error())
+// 		sendErrorResponse(w, err.Error())
+// 		return
+// 	}
 
-	log.Printf("Data updated on firebase\n")
+// 	log.Printf("Data updated on firebase\n")
 
 	u := bqClient.Dataset(datasetID).Table(tableID).Uploader()
 	rows := []*DeviceData{
