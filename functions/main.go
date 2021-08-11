@@ -135,7 +135,7 @@ func HandleTTNUplink(w http.ResponseWriter, r *http.Request) {
 
 // 	log.Printf("Sending update to firebase  %v\n", deviceData)
 
-// 	ctx := context.Background()
+	ctx := context.Background()
 
 // 	devicesRef := database.NewRef("devices")
 // 	err = devicesRef.Child(msg.DevID).Update(ctx, deviceData)
