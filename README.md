@@ -71,7 +71,7 @@ We have two options here, using Cloud Run and Google Cloud Functions.
 
 Just follow the steps and fill the `GCP_PROJECT` variable with your Google Cloud Platform project ID.
 
-[![Run on Google Cloud](https://storage.googleapis.com/cloudrun/button.svg)](https://console.cloud.google.com/cloudshell/editor?shellonly=true&cloudshell_image=gcr.io/cloudrun/button&cloudshell_git_repo=https://github.com/alvarowolfx/gcloud-lora-ttn&cloudshell_working_dir=functions)
+[![Run on Google Cloud](https://storage.googleapis.com/cloudrun/button.svg)](https://console.cloud.google.com/cloudshell/editor?shellonly=true&cloudshell_image=gcr.io/cloudrun/button&cloudshell_git_repo=https://github.com/TCIT/gcloud-lora-ttn&cloudshell_working_dir=functions)
 
 After deploying the server on Cloud Run, you can get it's url on GCP Console ([link](https://console.cloud.google.com/run)) and select the service `ttn-gcp-lora` that we just deployed. Them copy the URL will look like `https://{project-id}-{some-random-hash-string}.a.run.app`. The endpoint that handles TTN requests it `/uplink`, we are going to use this to setup TTN integration.
 
