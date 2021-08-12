@@ -117,13 +117,13 @@ func (dd *DeviceData) Save() (map[string]bigquery.Value, string, error) {
 func GetDeviceUpdate(msg UplinkMessage) map[string]interface{} {
 
 	gateways := map[string]interface{}{}
-	for _, gateway := range msg.RxMetadata.GatewayIds {
+	for _, gateway := range msg.UplinkMessage.RxMetadata.GatewayIds {
 		gateways[gateway.GatewayID] = map[string]interface{}{
 			"id":        gateway.GatewayID,
-			"rssi":      msg.RxMetadata.Rssi,
-			"snr":       msg.RxMetadata.Snr,
-			"channel":   msg.RxMetadata.ChannelRssi,
-			"time":      msg.RxMetadata.Timestamp,
+			"rssi":      msg.UplinkMessage.RxMetadata.Rssi,
+			"snr":       msg.UplinkMessage.RxMetadata.Snr,
+			"channel":   msg.UplinkMessage.RxMetadata.ChannelRssi,
+			"time":      msg.UplinkMessage.RxMetadata.Timestamp,
 			"latitude": 0,
 			"longitude": 0,
 			"altitude": 0,
