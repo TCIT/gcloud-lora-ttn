@@ -117,29 +117,29 @@ func (dd *DeviceData) Save() (map[string]bigquery.Value, string, error) {
 func GetDeviceUpdate(msg UplinkMessage) map[string]interface{} {
 
 	gateways := map[string]interface{}{}
-	for _, gateway := range msg.Metadata.Gateways {
-		gateways[gateway.GtwID] = map[string]interface{}{
-			"id":        gateway.GtwID,
-			"rssi":      gateway.Rssi,
-			"snr":       gateway.Snr,
-			"channel":   gateway.Channel,
-			"time":      gateway.Timestamp,
-			"latitude":  gateway.Latitude,
-			"longitude": gateway.Longitude,
-			"altitude":  gateway.Altitude,
+	for _, gateway := range msg.RxMetadata.GatewayIds {
+		gateways[gateway.GatewayID] = map[string]interface{}{
+			"id":        gateway.GatewayID,
+			"rssi":      msg.RxMetadata.Rssi,
+			"snr":       msg.RxMetadata.Snr,
+			"channel":   msg.RxMetadata.ChannelRssi,
+			"time":      msg.RxMetadata.Timestamp,
+			"latitude": 0,
+			"longitude": 0,
+			"altitude": 0,
 		}
 	}
 
 	base := map[string]interface{}{
-		"deviceId": msg.DevID,
-		"serial":   msg.HardwareSerial,
-		"data":     parseDeviceData(msg.PayloadRaw),
+		"deviceId": msg.DeviceID,
+		"serial":   "",
+		"data":     msg.UplinkMessage.DecodedPayload,
 		"meta": map[string]interface{}{
-			"updated":   msg.Metadata.Time,
-			"frequency": msg.Metadata.Frequency,
-			"latitude":  msg.Metadata.Latitude,
-			"longitude": msg.Metadata.Longitude,
-			"altitude":  msg.Metadata.Altitude,
+			"updated":   msg.Settings.Timestamp,
+			"frequency": msg.Settings.Frequency,
+			"latitude":  0,
+			"longitude": 0,
+			"altitude":  0,
 			"gateways":  gateways,
 		},
 	}
