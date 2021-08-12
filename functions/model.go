@@ -131,7 +131,7 @@ func GetDeviceUpdate(msg UplinkMessage) map[string]interface{} {
 	}
 
 	base := map[string]interface{}{
-		"deviceId": msg.DeviceID,
+		"deviceId": msg.EndDeviceIds.DeviceID,
 		"serial":   "",
 		"data":     msg.UplinkMessage.DecodedPayload,
 		"meta": map[string]interface{}{
