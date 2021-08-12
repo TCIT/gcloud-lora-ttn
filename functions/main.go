@@ -149,7 +149,7 @@ func HandleTTNUplink(w http.ResponseWriter, r *http.Request) {
 
 	u := bqClient.Dataset(datasetID).Table(tableID).Uploader()
 	rows := []*DeviceData{
-		{DeviceID: msg.DevID, Data: deviceData, Timestamp: msg.Metadata.Time},
+		{DeviceID: msg.DeviceID, Data: deviceData, Timestamp: msg.RxMetadata.Timestamp},
 	}
 
 	err = u.Put(ctx, rows)
