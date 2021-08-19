@@ -35,7 +35,7 @@ type UplinkMessage struct {
 			} `json:"message"`
 		} `json:"decoded_payload"`
 		DecodedPayloadWarnings []interface{} `json:"decoded_payload_warnings"`
-		RxMetadata             []struct {
+		RxMetadata [] struct {
 			GatewayIds struct {
 				GatewayID string `json:"gateway_id"`
 				Eui       string `json:"eui"`
@@ -97,7 +97,7 @@ func parseDeviceData(payload string) map[string]interface{} {
 type DeviceData struct {
 	DeviceID  string
 	Data      map[string]interface{}
-	Timestamp time.Time
+	Timestamp int64
 }
 
 // Save implements the ValueSaver interface.
@@ -117,13 +117,13 @@ func (dd *DeviceData) Save() (map[string]bigquery.Value, string, error) {
 func GetDeviceUpdate(msg UplinkMessage) map[string]interface{} {
 
 	gateways := map[string]interface{}{}
-	for _, gateway := range msg.UplinkMessage.RxMetadata.GatewayIds {
-		gateways[gateway.GatewayID] = map[string]interface{}{
-			"id":        gateway.GatewayID,
-			"rssi":      msg.UplinkMessage.RxMetadata.Rssi,
-			"snr":       msg.UplinkMessage.RxMetadata.Snr,
-			"channel":   msg.UplinkMessage.RxMetadata.ChannelRssi,
-			"time":      msg.UplinkMessage.RxMetadata.Timestamp,
+	for _, rxMetadata := range msg.UplinkMessage.RxMetadata {
+		gateways[rxMetadata.GatewayIds.GatewayID] = map[string]interface{}{
+			"id":        rxMetadata.GatewayIds.GatewayID,
+			"rssi":      rxMetadata.Rssi,
+			"snr":       rxMetadata.Snr,
+			"channel":   rxMetadata.ChannelRssi,
+			"time":      rxMetadata.Timestamp,
 			"latitude": 0,
 			"longitude": 0,
 			"altitude": 0,
@@ -135,8 +135,8 @@ func GetDeviceUpdate(msg UplinkMessage) map[string]interface{} {
 		"serial":   "",
 		"data":     msg.UplinkMessage.DecodedPayload,
 		"meta": map[string]interface{}{
-			"updated":   msg.Settings.Timestamp,
-			"frequency": msg.Settings.Frequency,
+			"updated":   msg.UplinkMessage.Settings.Timestamp,
+			"frequency": msg.UplinkMessage.Settings.Frequency,
 			"latitude":  0,
 			"longitude": 0,
 			"altitude":  0,
