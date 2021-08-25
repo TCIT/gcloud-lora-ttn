@@ -8,12 +8,10 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"time"
 
 	"cloud.google.com/go/bigquery"
 	"firebase.google.com/go"
 	"firebase.google.com/go/db"
-	"google.golang.org/api/iterator"
 )
 
 var app *firebase.App
@@ -47,66 +45,6 @@ func init() {
 	}
 }
 
-// HistoryResultItem history query result
-type HistoryResultItem struct {
-	DeviceID string    `json:"deviceId"`
-	Time     time.Time `json:"time"`
-	Data     string    `json:"data"`
-}
-
-// HandleDeviceHistoryQuery returns last 7 days of data for a device
-func HandleDeviceHistoryQuery(w http.ResponseWriter, r *http.Request) {
-	finished := handleCORSRequest(w, r)
-	if finished {
-		return
-	}
-
-	p := r.URL.Query()
-	deviceID := p.Get("deviceId")
-	if deviceID == "" {
-		sendErrorResponse(w, "Missing deviceId query param.")
-		return
-	}
-
-	table := "`" + projectID + "." + datasetID + "." + tableID + "`"
-	q := bqClient.Query(`
-		SELECT d.deviceId,
-			d.time,
-			JSON_EXTRACT(d.data, '$.data') as data
-		FROM ` + table + ` d
-		WHERE d.time between timestamp_sub(current_timestamp, INTERVAL 7 DAY) and current_timestamp()    
-		and d.deviceId = "` + deviceID + `"
-    order by d.time
-	`)
-	ctx := context.Background()
-	it, err := q.Read(ctx)
-
-	if err != nil {
-		sendErrorResponse(w, err.Error())
-		return
-	}
-
-	var results []interface{}
-
-	for {
-		var i HistoryResultItem
-		err := it.Next(&i)
-		if err == iterator.Done {
-			break
-		}
-
-		if err != nil {
-			sendErrorResponse(w, err.Error())
-			return
-		}
-
-		results = append(results, i)
-	}
-
-	sendSuccessResponseWithData(w, results)
-	return
-}
-
 // HandleTTNUplink process uplink msg sent by TTN
 func HandleTTNUplink(w http.ResponseWriter, r *http.Request) {
 	bodyBytes, err := ioutil.ReadAll(r.Body)
@@ -133,23 +71,20 @@ func HandleTTNUplink(w http.ResponseWriter, r *http.Request) {
 
 	deviceData := GetDeviceUpdate(msg)
 
-// 	log.Printf("Sending update to firebase  %v\n", deviceData)
-
 	ctx := context.Background()
 
-// 	devicesRef := database.NewRef("devices")
-// 	err = devicesRef.Child(msg.DevID).Update(ctx, deviceData)
-// 	if err != nil {
-// 		log.Printf("error updating firebase: %v\n", err.Error())
-// 		sendErrorResponse(w, err.Error())
-// 		return
-// 	}
-
-// 	log.Printf("Data updated on firebase\n")
-
 	u := bqClient.Dataset(datasetID).Table(tableID).Uploader()
+
+	var temp float64 = msg.UplinkMessage.DecodedPayload.Message.DegreesC
+	var humidity float64 = msg.UplinkMessage.DecodedPayload.Message.Humidity
+
+	if (temp == 0 || humidity == 0) {
+		temp = msg.UplinkMessage.DecodedPayload.Message.TempC_DS
+		humidity = msg.UplinkMessage.DecodedPayload.Message.Hum_SHT
+	}
+
 	rows := []*DeviceData{
-		{DeviceID: msg.EndDeviceIds.DeviceID, Data: deviceData, Timestamp: msg.UplinkMessage.Settings.Timestamp},
+		{DeviceID: msg.EndDeviceIds.DeviceID, Data: deviceData, Timestamp: msg.UplinkMessage.Settings.Timestamp, Temp: temp, Humidity: humidity},
 	}
 
 	err = u.Put(ctx, rows)

@@ -12,7 +12,6 @@ func main() {
 	log.Print("GCP TTN Integration started.")
 
 	http.HandleFunc("/uplink", ttn.HandleTTNUplink)
-	http.HandleFunc("/history", ttn.HandleDeviceHistoryQuery)
 
 	port := os.Getenv("PORT")
 	if port == "" {
