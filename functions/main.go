@@ -76,7 +76,7 @@ func HandleTTNUplink(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Debugging time stamp %v\n", msg.UplinkMessage.Settings.Timestamp)
 
 	rows := []*DeviceData{
-		{DeviceID: msg.EndDeviceIds.DeviceID, Data: deviceData, Timestamp: msg.UplinkMessage.Settings.Timestamp, Temp: temp, Humidity: humidity},
+		{DeviceID: msg.EndDeviceIds.DeviceID, Data: deviceData, Timestamp: msg.UplinkMessage.ReceivedAt, Temp: temp, Humidity: humidity},
 	}
 
 	err = u.Put(ctx, rows)

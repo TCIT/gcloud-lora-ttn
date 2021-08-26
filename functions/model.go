@@ -100,7 +100,7 @@ func parseDeviceData(payload string) map[string]interface{} {
 type DeviceData struct {
 	DeviceID  string
 	Data      map[string]interface{}
-	Timestamp int64
+	Timestamp time.Time
 	Humidity float64
 	Temp float64
 }
