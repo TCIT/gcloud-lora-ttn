@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/TCIT/ttn-lora-gcp"
+	"github.com/alvarowolfx/ttn-lora-gcp"
 	"log"
 	"net/http"
 	"os"
