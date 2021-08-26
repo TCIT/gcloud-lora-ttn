@@ -32,9 +32,9 @@ type UplinkMessage struct {
 			Message struct {
 				DegreesC float64 `json:"degreesC"`
 				Humidity float64 `json:"humidity"`
-				Hum_SHT float64 `json:"hum_sht"`
-				TempC_SHT float64 `json:"tempc_sht"`
-      	TempC_DS float64 `json:"tempc_ds"`
+				HumSHT    float64 `json:"Hum_SHT"`
+				TempCDS   float64 `json:"TempC_DS"`
+				TempCSHT  float64 `json:"TempC_SHT"`
 			} `json:"message"`
 		} `json:"decoded_payload"`
 		DecodedPayloadWarnings []interface{} `json:"decoded_payload_warnings"`

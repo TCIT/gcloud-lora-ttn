@@ -24,20 +24,7 @@ var tableID = "raw_data"
 func init() {
 	ctx := context.Background()
 
-	conf := &firebase.Config{
-		DatabaseURL: "https://" + projectID + ".firebaseio.com",
-	}
-
 	var err error
-	app, err = firebase.NewApp(ctx, conf)
-	if err != nil {
-		log.Fatalf("error initializing app: %v\n", err)
-	}
-
-	database, err = app.Database(ctx)
-	if err != nil {
-		log.Fatalf("error initializing db: %v\n", err)
-	}
 
 	bqClient, err = bigquery.NewClient(ctx, projectID)
 	if err != nil {
@@ -80,8 +67,13 @@ func HandleTTNUplink(w http.ResponseWriter, r *http.Request) {
 
 	if (temp == 0 || humidity == 0) {
 		temp = msg.UplinkMessage.DecodedPayload.Message.TempC_DS
-		humidity = msg.UplinkMessage.DecodedPayload.Message.Hum_SHT
+		humidity = msg.UplinkMessage.DecodedPayload.Message.HumSHT
+
+		log.Printf("Replacing temp and humidity %v\n", msg.UplinkMessage.DecodedPayload.Message)
 	}
+
+	log.Printf("Debugging time stamp %v\n", msg.UplinkMessage.Settings.Timestamp * 1000)
+	log.Printf("Debugging time stamp %v\n", msg.UplinkMessage.Settings.Timestamp)
 
 	rows := []*DeviceData{
 		{DeviceID: msg.EndDeviceIds.DeviceID, Data: deviceData, Timestamp: msg.UplinkMessage.Settings.Timestamp, Temp: temp, Humidity: humidity},
