@@ -69,11 +69,8 @@ func HandleTTNUplink(w http.ResponseWriter, r *http.Request) {
 		temp = msg.UplinkMessage.DecodedPayload.Message.TempCDS
 		humidity = msg.UplinkMessage.DecodedPayload.Message.HumSHT
 
-		log.Printf("Replacing temp and humidity %v\n", msg.UplinkMessage.DecodedPayload.Message)
+		log.Printf("Replacing temp and humidity %v\n", msg.UplinkMessage.DecodedPayload.Message.TempCDS)
 	}
-
-	log.Printf("Debugging time stamp %v\n", msg.UplinkMessage.Settings.Timestamp * 1000)
-	log.Printf("Debugging time stamp %v\n", msg.UplinkMessage.Settings.Timestamp)
 
 	rows := []*DeviceData{
 		{DeviceID: msg.EndDeviceIds.DeviceID, Data: deviceData, Timestamp: msg.UplinkMessage.ReceivedAt, Temp: temp, Humidity: humidity},
