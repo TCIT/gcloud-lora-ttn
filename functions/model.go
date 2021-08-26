@@ -115,8 +115,8 @@ func (dd *DeviceData) Save() (map[string]bigquery.Value, string, error) {
 		"deviceId": dd.DeviceID,
 		"data": string(data),
 		"time":	dd.Timestamp,
-		// "temp": dd.Temp,
-		// "humidity": dd.Humidity,
+		"temp": dd.Temp,
+		"humidity": dd.Humidity,
 	}, "", nil
 }
 
