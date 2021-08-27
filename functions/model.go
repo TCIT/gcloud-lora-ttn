@@ -29,12 +29,12 @@ type UplinkMessage struct {
 		FCnt           int    `json:"f_cnt"`
 		FrmPayload     string `json:"frm_payload"`
 		DecodedPayload struct {
+			HumSHT    float64 `json:"Hum_SHT"`
+			TempCDS   float64 `json:"TempC_DS"`
+			TempCSHT  float64 `json:"TempC_SHT"`
 			Message struct {
 				DegreesC float64 `json:"degreesC"`
 				Humidity float64 `json:"humidity"`
-				HumSHT    float64 `json:"Hum_SHT"`
-				TempCDS   float64 `json:"TempC_DS"`
-				TempCSHT  float64 `json:"TempC_SHT"`
 			} `json:"message"`
 		} `json:"decoded_payload"`
 		DecodedPayloadWarnings []interface{} `json:"decoded_payload_warnings"`

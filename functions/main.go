@@ -66,10 +66,10 @@ func HandleTTNUplink(w http.ResponseWriter, r *http.Request) {
 	var humidity float64 = msg.UplinkMessage.DecodedPayload.Message.Humidity
 
 	if (temp == 0 || humidity == 0) {
-		temp = msg.UplinkMessage.DecodedPayload.Message.TempCDS
-		humidity = msg.UplinkMessage.DecodedPayload.Message.HumSHT
+		temp = msg.UplinkMessage.DecodedPayload.TempCDS
+		humidity = msg.UplinkMessage.DecodedPayload.HumSHT
 
-		log.Printf("Replacing temp and humidity %v\n", msg.UplinkMessage.DecodedPayload.Message.TempCDS)
+		log.Printf("Replacing temp and humidity %v\n", msg.UplinkMessage.DecodedPayload.TempCDS)
 	}
 
 	rows := []*DeviceData{
